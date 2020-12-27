@@ -62,7 +62,7 @@ doubled_numbers = [x * 2 for x in numbers]
 - In the face of ambiguity, refuse the temptation to guess.
 - ...
 
-6. Things you should know
+6. ### Things you should know
     
     Before moving on, we should check your Python knowledge level. There are a few things this course assumes you have a working knowledge of. You don't need to be an expert on the topics listed here, but you should definitely be familiar with them in order to get the most out of this course.
 
@@ -75,7 +75,7 @@ doubled_numbers = [x * 2 for x in numbers]
     - Writing and using list comprehensions
       - [Python Data Science Toolbox (Part 2)](https://learn.datacamp.com/courses/python-data-science-toolbox-part-2)
 
-7. Let's get started!
+7. ### Let's get started!
     
     Now that we've defined efficient and Pythonic code, and touched on a few things you should already be familiar with, it's time to start coding!
 
@@ -273,7 +273,7 @@ nums_np ** 2
 > array([4, 1, 0, 1, 4])
 ```
 
-- ### Basic 1-D indexing (lists)
+- Basic 1-D indexing (lists)
 
 
 ```python
@@ -288,7 +288,7 @@ nums[1:4]
 > [-1, 0, 1]
 ```
 
-- ### Basic 1-D indexing (arrays)
+- Basic 1-D indexing (arrays)
 
 ```python
 nums_np = np.array(nums)
@@ -302,7 +302,7 @@ nums_np[1:4]
 > array([-1, 0, 1])
 ```
 
-- ### Basic 2-D indexing (lists)
+- Basic 2-D indexing (lists)
 
 ```python
 nums2 = [ [1, 2, 3],[4, 5, 6] ]
@@ -314,7 +314,7 @@ nums2[0][1]
 > [1, 4]
 ```
 
-- ### Basic 2-D indexing (arrays)
+- Basic 2-D indexing (arrays)
 
 ```python
 nums2_np = np.array(nums2)
