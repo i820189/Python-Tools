@@ -264,7 +264,84 @@ Magic command for line-by-line times
 ```python
 %lprun -f convert_units convert_units(heroes, hts, wts)
 ```
-:::image type="content" source="assets/fig1.png" alt-text="output":::
 
-:::image type="content" source="assets/fig2.png" alt-text="output":::
+![fig1](assets/fig1.png)
 
+![fig2](assets/fig2.png)
+
+VS 
+
+
+```python
+%timeit convert_units convert_units(heroes, hts, wts)
+
+> 3 µs ± 32 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+```
+
+
+# Code profiling for memory usage
+
+Quick and dirty approach
+
+```python
+import sys
+nums_list = [*range(1000)]
+sys.getsizeof(nums_list)
+> 9112
+```
+
+
+
+```python
+import numpy as np
+nums_np = np.array(range(1000))
+sys.getsizeof(nums_np)
+> 8096
+```
+
+## Code profiling: memory
+- Detailed stats on memory consumption
+- Line-by-line analyses
+- Package used: memory_profiler
+
+```python
+pip install memory_profiler
+```
+
+Using `memory_profiler` package
+
+```python
+%load_ext memory_profiler
+
+%mprun -f convert_units convert_units(heroes, hts, wts)
+```
+
+- Functions must be imported when using memory_profiler
+  - `hero_funcs.py`
+
+```python
+from hero_funcs import convert_units
+
+%load_ext memory_profiler
+
+%mprun -f convert_units convert_units(heroes, hts, wts)
+```
+
+## %mprun output
+```python
+%mprun -f convert_units convert_units(heroes, hts, wts)
+```
+
+![fig3](assets/fig3.png)
+
+## %mprun output caveats
+Data used in this example is a random sample of **35,000** heroes.
+**(not original 480 superheroes dataset)**
+```python
+%mprun -f convert_units convert_units(heroes, hts, wts)
+```
+![fig4](assets/fig4.png)
+
+- Inspects memory by querying the operating system
+- Results may dier between platforms and runs
+  - Can still observe how each line of code compares to others **based on memory consumption**
