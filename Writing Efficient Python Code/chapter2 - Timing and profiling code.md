@@ -302,7 +302,7 @@ sys.getsizeof(nums_np)
 ## Code profiling: memory
 - Detailed stats on memory consumption
 - Line-by-line analyses
-- Package used: memory_profiler
+- Package used: `memory_profiler`
 
 ```python
 pip install memory_profiler
