@@ -316,16 +316,16 @@ print(unique_types_set)
 ## Eliminating loops
 
 ### Looping in Python
-- Looping paerns:
+- Looping patterns:
   - `for` loop: iterate over sequence piece-by-piece
   - `while` loop: repeat loop as long as condition is met
   - "nested" loops: use one loop inside another loop
-  - Costly!
+  - Costly!!!!
 
 ### Benefits of eliminating loops
 - Fewer lines of code
 - Beer code readability
-  - "Flat is beer than nested"
+  - "Flat is better than nested"
 - Eciency gains
 
 ### Eliminating loops with built-ins
@@ -422,7 +422,7 @@ for row in poke_stats:
 print(avgs)
 > [79.25, 37.5, 82.5, ...]
 ```
-
+ Best way :
 
 ```python
 avgs_np = poke_stats.mean(axis=1)
@@ -430,4 +430,19 @@ avgs_np = poke_stats.mean(axis=1)
 print(avgs_np)
 
 > [ 79.25 37.5 82.5 ...]
+```
+testing :
+
+```python
+%timeit avgs = poke_stats.mean(axis=1)
+> 23.1 µs ± 235 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+```
+```python
+%%timeit
+avgs = []
+for row in poke_stats:
+    avg = np.mean(row)
+    avgs.append(avg)
+
+> 5.54 ms ± 224 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 ```
