@@ -437,6 +437,7 @@ testing :
 %timeit avgs = poke_stats.mean(axis=1)
 > 23.1 µs ± 235 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
 ```
+
 ```python
 %%timeit
 avgs = []
@@ -445,4 +446,100 @@ for row in poke_stats:
     avgs.append(avg)
 
 > 5.54 ms ± 224 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+```
+
+## Writing better loops
+
+### Lesson caveat
+- Some of the following loops can be eliminated with techniques covered in previous lessons.
+- Examples in this lesson are used for **demonstrative** purposes
+
+### Writing better loops
+- Understand what is being done with each loop iteration
+- Move one-time calculations outside (above) the loop
+- Use holistic conversions outside (below) the loop
+- Anything that is done **once** should be outside the loop
+
+### Moving calculations above a loop
+
+```python
+import numpy as np
+
+names = ['Absol','Aron','Jynx','Natu','Onix']
+attacks = np.array([130, 70, 50, 50, 45])
+
+%%timeit
+for pokemon,attack in zip(names, attacks):
+    total_attack_avg = attacks.mean()
+    if attack > total_attack_avg:
+        print(
+            "{}'s attack: {} > average: {}!"
+            .format(pokemon, attack, total_attack_avg)
+        )
+
+> Absol's attack: 130 > average: 69.0!
+> Aron's attack: 70 > average: 69.0!
+> 74.9 µs ± 3.42 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+```
+
+Calculate total average once (outside the loop)
+```python
+import numpy as np
+
+names = ['Absol','Aron','Jynx','Natu','Onix']
+attacks = np.array([130, 70, 50, 50, 45])
+
+# Calculate total average once (outside the loop)
+total_attack_avg = attacks.mean()
+
+%%timeit
+for pokemon,attack in zip(names, attacks):
+    if attack > total_attack_avg:
+        print(
+            "{}'s attack: {} > average: {}!"
+            .format(pokemon, attack, total_attack_avg)
+        )
+
+> Absol's attack: 130 > average: 69.0!
+> Aron's attack: 70 > average: 69.0!
+> 37.5 µs ± 281 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+```
+
+Using holistic conversions 
+
+```python
+names = ['Pikachu','Squirtle','Articuno', ...]
+legend_status = [False, False, True, ...]
+generations = [1, 1, 1, ...]
+
+%%timeit
+poke_data = []
+
+for poke_tuple in zip(names, legend_status, generations):
+    poke_list = list(poke_tuple)
+    poke_data.append(poke_list)
+    print(poke_data)
+
+> [['Pikachu', False, 1], ['Squirtle', False, 1], ['Articuno', True, 1], ...]
+> 261 µs ± 23.2 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+```
+
+with `map`
+```python
+names = ['Pikachu','Squirtle','Articuno', ...]
+legend_status = [False, False, True, ...]
+generations = [1, 1, 1, ...]
+
+%%timeit
+poke_data_tuples = []
+
+for poke_tuple in zip(names, legend_status, generations):
+    poke_data_tuples.append(poke_tuple)
+
+poke_data = [*map(list,poke_data_tuples)]
+
+print(poke_data)
+
+> [['Pikachu', False, 1], ['Squirtle', False, 1], ['Articuno', True, 1], ...]
+> 224 µs ± 1.67 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
 ```
