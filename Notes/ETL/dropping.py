@@ -1,0 +1,1 @@
+X = data.drop('quality', axis=1)

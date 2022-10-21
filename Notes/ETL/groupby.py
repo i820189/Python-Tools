@@ -15,3 +15,7 @@ df.pivot_table(index=col1, values= col2,col3], aggfunc=mean)
 
 # Finds the average across all columns for every unique column 1 group
 df.groupby(col1).agg(np.mean) 
+
+
+# Crear dataframe desde otro dataframe
+df_brand = pd.DataFrame(df_misiones__['brandto'].unique(),  columns = ['brandto'])

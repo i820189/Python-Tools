@@ -25,3 +25,16 @@ pd.read_json(json_string) # Reads from a JSON formatted string, URL or file.
 pd.read_html(url) # Parses an html URL, string or file and extracts tables to a list of dataframes
 pd.read_clipboard() # Takes the contents of your clipboard and passes it to read_table()
 pd.DataFrame(dict) # From a dict, keys for columns names, values for data as lists
+
+
+
+
+# Databricks
+
+## Lectura de datos desde blob Storage
+misiones_ejecucion_ = pd.read_csv('/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202210/output_format_revenue/raw/misiones/misiones_ejecucion_afiches.csv')
+print(misiones_ejecucion_.columns)
+misiones_sku_ = pd.read_csv('/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202210/output_format_revenue/raw/misiones/mision_sku.csv')
+print(misiones_sku_.columns)
+misiones_sku_aroon_ = pd.read_excel('/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202210/output_format_revenue/raw/misiones/mision_sku_aroon.xlsx')
+print(misiones_sku_aroon.columns)

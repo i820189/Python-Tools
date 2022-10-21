@@ -5,11 +5,14 @@ plt.title('title')
 
 # hist: numerical feature distribution
 df.Age.hist()
+
 # categorical feature distribution  
 df.Survived.value_counts().plot(kind = 'bar')
+
 # Basic box plot
 sns.boxplot(consum.instantaneous,orient='v')
 plt.title('instantaneous consumption value distribution')
+
 # Box plot with hue
 sns.boxplot(x="Sex", y="Age",hue = 'Survived', data=df, palette="Set3")
 

@@ -1657,8 +1657,12 @@ data.groupby('Sex').agg({'PassengerId': 'count'})
 data.groupby(['Pclass', 'Sex']).agg({'PassengerId': 'count'})
 
 df_misiones_.groupby('Group').size().reset_index(name='row1')
+
 # validar cuantas poc comparten el dos archivos o más
 df_.groupby('poc')['file'].nunique().reset_index(name='row1').query("row1 > 0")
+
+# Contar cuantas POC by SKU repiten registros por SKU
+poc_by_sku.groupby(['poc','sku'])['sku'].count().reset_index(name='row1').query("row1 > 1")
 
 df[['Gender','Exited']].groupby('Gender').mean()
 df[['Gender','Exited']].groupby('Gender').agg(['mean','count'])

@@ -13,3 +13,44 @@ df.rename(columns=lambda x: x + 1) # Mass renaming of columns
 df.rename(columns={'old_name': 'new_ name'}) # Selective renaming
 df.set_index('column_one') # Changes the index
 df.rename(index=lambda x: x + 1) # Mass renaming of index
+
+
+def remove_spaces(dataframe):  
+  for i in dataframe.columns:
+    if dataframe[i].dtype == 'object':
+      dataframe[i] = dataframe[i].map(str.strip)
+    else:
+      pass
+  
+
+----------------------
+
+import re
+
+def formatbrand(text):
+  text_ = re.sub(r"[-()\"#/@;:<>{}`+=~|.!?,']", " ", text)
+  lineNumber = []
+  for line in text_.split(" "):
+      line = line.strip()  # Strip trailing spaces and newline
+      lineNumber.append(line.capitalize())
+
+  txt = "".join(lineNumber)
+  return txt
+
+
+X = data.drop('quality', axis=1)
+
+
+
+
+To find all the values from the series that starts with a pattern "s":
+SQL - WHERE column_name LIKE 's%' 
+Python - column_name.str.startswith('s')
+
+To find all the values from the series that ends with a pattern "s":
+SQL - WHERE column_name LIKE '%s'
+Python - column_name.str.endswith('s')
+
+To find all the values from the series that contains pattern "s":
+SQL - WHERE column_name LIKE '%s%'
+Python - column_name.str.contains('s')
