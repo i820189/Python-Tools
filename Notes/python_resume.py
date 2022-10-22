@@ -1,54 +1,55 @@
+import datetime
+import matplotlib.pyplot as plt
+import glob
 from stat import FILE_ATTRIBUTE_ARCHIVE
 import pandas as pd
 import numpy as np
 
 
-## Python
+# Python
 
 ############################################################################################################
 ##### ENTORNOS ####################################################################
 ############################################################################################################
 
->python -m pip install --upgrade pip  # actualizar el PIP
+>python - m pip install - -upgrade pip  # actualizar el PIP
 
 > pip install virtualenv (instalar en el path de python38 de archivos de programa, sino agregar la carpeta scripts al path de entorno global)
-> virtualenv env_name_entorno # creo el entorno
-> source env/bin/activate # activar para linux / mac
-> source env/Scripts/activate # activarpara gitbash
-> D:/projcts/ejemplo/env/Scripts>activate   # activar para command (CMD)
+> virtualenv env_name_entorno  # creo el entorno
+> source env/bin/activate  # activar para linux / mac
+> source env/Scripts/activate  # activarpara gitbash
+> D: / projcts/ejemplo/env/Scripts > activate   # activar para command (CMD)
 
-> pip freeze # Lista los paquetes instalados en la virtual con sus versiones
+> pip freeze  # Lista los paquetes instalados en la virtual con sus versiones
 > pip freeze > requeriments.txt   # pasar
 
-> deactivate # desactivar
+> deactivate  # desactivar
 
 
+**** segundo caso ** ***
 
+python - m venv env
+source env/bin/activate(mac)
 
-**** segundo caso *****
-
-python -m venv env
-source env/bin/activate   (mac)
-
-pip list  (ver versión de pip)
-pip install --upgrade pip    (actualizo pip)
+pip list(ver versión de pip)
+pip install - -upgrade pip(actualizo pip)
 
 pip install flask
 
 touch app.py
 
 
-export FLASK_APP=app.py    (setear variables)
-export FLASK_ENV=development / export FLASK_ENV=production
+export FLASK_APP = app.py(setear variables)
+export FLASK_ENV = development / export FLASK_ENV = production
 
-flask run    (inicializar el app o tmb python app.py, previa seteada)
+flask run(inicializar el app o tmb python app.py, previa seteada)
 
-pip freeze > requirements.txt   / pip install -r requirements.txt
+pip freeze > requirements.txt / pip install - r requirements.txt
 
 
-**** Streamlit ***
+**** Streamlit ** *
 
-source ~/.bash_profile   
+source ~/.bash_profile
 pip install streamlit
 streamlit run myapp.py
 
@@ -56,12 +57,11 @@ streamlit run myapp.py
 ############################################################################################################
 ##### CARPETS / FILES ####################################################################
 ############################################################################################################
-import glob
-for i in glob.glob("./*") : print(i)
+for i in glob.glob("./*"): print(i)
 
 filename = r'.\ds_consultora_202006.json'
 
-os.getcwd() # detect the current working directory and print it
+os.getcwd()  # detect the current working directory and print it
 os.mkdir('/carpeta1/carpeta2')
 
 try:
@@ -71,7 +71,7 @@ except OSError:
 else:
 	print('creado')
 
-path = r'/Users/javierdiaz/Dropbox/Belcorp/python/prepedidos' # MAC
+path = r'/Users/javierdiaz/Dropbox/Belcorp/python/prepedidos'  # MAC
 all_files = glob.glob(path + "/*.csv")
 
 # forecast : https://facebook.github.io/prophet/docs/quick_start.html
@@ -84,21 +84,24 @@ all_files = glob.glob(path + "/*.csv")
  IMPORTING DATA
 ############################################################################################################
 
-pd.read_csv(filename) # From a CSV file
-pd.read_table(filename) # From a delimited text file (like TSV)
-pd.read_excel(filename) # From an Excel file
-pd.read_sql(query, connection_object) # Reads from a SQL table/database
-pd.read_json(json_string) # Reads from a JSON formatted string, URL or file.
-pd.read_html(url) # Parses an html URL, string or file and extracts tables to a list of dataframes
-pd.read_clipboard() # Takes the contents of your clipboard and passes it to read_table()
-pd.DataFrame(dict) # From a dict, keys for columns names, values for data as lists
+pd.read_csv(filename)  # From a CSV file
+pd.read_table(filename)  # From a delimited text file (like TSV)
+pd.read_excel(filename)  # From an Excel file
+pd.read_sql(query, connection_object)  # Reads from a SQL table/database
+pd.read_json(json_string)  # Reads from a JSON formatted string, URL or file.
+# Parses an html URL, string or file and extracts tables to a list of dataframes
+pd.read_html(url)
+pd.read_clipboard()  # Takes the contents of your clipboard and passes it to read_table()
+# From a dict, keys for columns names, values for data as lists
+pd.DataFrame(dict)
 
 
 #######
 Carga de datos a través de la función open
 ######
 
-data3 = open(mainpath + "/" + "customer-churn-model/Customer Churn Model.txt",'r')
+data3 = open(mainpath + "/" +
+             "customer-churn-model/Customer Churn Model.txt", 'r')
 
 cols = data3.readline().strip().split(",")
 n_cols = len(cols)
@@ -115,7 +118,7 @@ for line in data3:
     counter += 1
 
 
-print("El data set tiene %d filas y %d columnas"%(counter, n_cols))
+print("El data set tiene %d filas y %d columnas" % (counter, n_cols))
 
 df3 = pd.DataFrame(main_dict)
 
@@ -130,87 +133,91 @@ EXPLORING DATA
 pd.options.display.max_rows = 999
 
 
-#Once you have imported your data into a Pandas dataframe, you can use these methods to get a sense of what the data looks like:
+# Once you have imported your data into a Pandas dataframe, you can use these methods to get a sense of what the data looks like:
 
-df.shape() # Prints number of rows and columns in dataframe
-df.head(n) # Prints first n rows of the DataFrame
-df.tail(n) # Prints last n rows of the DataFrame
-df.info() # Index, Datatype and Memory information
-df.describe() # Summary statistics for numerical columns
-s.value_counts(dropna=False) # Views unique values and counts
-df['pais'].unique() # Ver valores unicos como array
-df['pais'].unique().tolist() # Ver valores unicos como lista
-len( df['pais'].unique() ) # Ver cuantos países hay
+df.shape()  # Prints number of rows and columns in dataframe
+df.head(n)  # Prints first n rows of the DataFrame
+df.tail(n)  # Prints last n rows of the DataFrame
+df.info()  # Index, Datatype and Memory information
+df.describe()  # Summary statistics for numerical columns
+s.value_counts(dropna=False)  # Views unique values and counts
+df['pais'].unique()  # Ver valores unicos como array
+df['pais'].unique().tolist()  # Ver valores unicos como lista
+len(df['pais'].unique())  # Ver cuantos países hay
 
-df['sex'].value_counts(ascending=True) # rank ascending conunt values
-df['fare'].value_counts(bins=7) #bins rank 
+df['sex'].value_counts(ascending=True)  # rank ascending conunt values
+df['fare'].value_counts(bins=7)  # bins rank
 
-df.apply(pd.Series.value_counts) # Unique values and counts for all columns
-df.describe() # Summary statistics for numerical columns
-df.mean() # Returns the mean of all columns
-df.corr() # Returns the correlation between columns in a DataFrame
-df.count() # Returns the number of non-null values in each DataFrame column
-df.max() # Returns the highest value in each column
-df.min() # Returns the lowest value in each column
-df.median() # Returns the median of each column
-df.std() # Returns the standard deviation of each column
+df.apply(pd.Series.value_counts)  # Unique values and counts for all columns
+df.describe()  # Summary statistics for numerical columns
+df.mean()  # Returns the mean of all columns
+df.corr()  # Returns the correlation between columns in a DataFrame
+df.count()  # Returns the number of non-null values in each DataFrame column
+df.max()  # Returns the highest value in each column
+df.min()  # Returns the lowest value in each column
+df.median()  # Returns the median of each column
+df.std()  # Returns the standard deviation of each column
 df.columns
 df.shape
 df.info
-df['pais'].value_counts(dropna=False)  # contar vaores unicos, contabilizar lso nulls
+# contar vaores unicos, contabilizar lso nulls
+df['pais'].value_counts(dropna=False)
 df['pais'].value_counts(dropna=False).head()
 
-df.describe() #statistics
-
-
+df.describe()  # statistics
 
 
 ############################################################################################################
 DATA VISUALIZATION
 ############################################################################################################
 # BARPLOT / Continuous / frequencies / Discrete
-df['totales'].plot('hist')  # puedo ver la distribución de los totales, y ver outliers
-df[df['totales'] > 100000] # puedo encontrar ya los outliers, mayores a algo anormal
+# puedo ver la distribución de los totales, y ver outliers
+df['totales'].plot('hist')
+# puedo encontrar ya los outliers, mayores a algo anormal
+df[df['totales'] > 100000]
 
 # BOXPLOT / Outliers / in/Max / 25,50,75 % percentiles
 df.boxplot(column='totales', by='pais')
 plt.show()
 
 # SCATTERPLOTS / relation 2 variables / Flag potencial bad data (erros not found by looking at 1 variable)
-#...no dice buscar...
+# ...no dice buscar...
 
 .apply(lambda x: str(x))
 
 
 ######################################### MATPLOTLIB #######################################################
-import matplotlib.pyplot as plt
-year = [202007,202008,202009,202010]
+year = [202007, 202008, 202009, 202010]
 pop = [2.6, 3.67, 1.7, 2.2]
 
-year = [202001,202002,202003] + year  # agregar mas valores a los años
+year = [202001, 202002, 202003] + year  # agregar mas valores a los años
 pop = [3.3, 4.4, 5.1] + pop  # agregar mas valores a los pop
 
-plt.plot(year,pop)  # lineas unidas
+plt.plot(year, pop)  # lineas unidas
 
-np_pop = np.array(pop) * 3 # penalizo mas el pop, para que las burbujas se vean mas grandes y se pueda detallar los pesos (s)
+# penalizo mas el pop, para que las burbujas se vean mas grandes y se pueda detallar los pesos (s)
+np_pop = np.array(pop) * 3
 
-plt.scatter(year, pop, s = np_pop) # puntos en el plano, la variable S es tamaño de los punts del scatter plot, si no va simplemente no tiene tamaño es uniforme
-plt.scatter(x = gdp_cap, y = life_exp, s = np.array(pop) * 2, c = col, alpha=0.8) # C = colores por categoria, alpha = transparency
+# puntos en el plano, la variable S es tamaño de los punts del scatter plot, si no va simplemente no tiene tamaño es uniforme
+plt.scatter(year, pop, s=np_pop)
+# C = colores por categoria, alpha = transparency
+plt.scatter(x=gdp_cap, y=life_exp, s=np.array(pop) * 2, c=col, alpha=0.8)
 
-plt.hist(values, bins=3) # distribución de datos en un rango
+plt.hist(values, bins=3)  # distribución de datos en un rango
 
-#Labels Axis
+# Labels Axis
 plt.xlabel('Campaña')
 plt.ylabel('Totales')
 
-#Title
+# Title
 plt.title('Titulo de campaña')
 
-#Ticks
-plt.yticks( [0,2,4,6,8,10], ['0','2B','4B','6B','8B','10B'] )     # Etiquetas para las escalas por ejemplo en el axis "y" 
+# Ticks
+# Etiquetas para las escalas por ejemplo en el axis "y"
+plt.yticks([0, 2, 4, 6, 8, 10], ['0', '2B', '4B', '6B', '8B', '10B'])
 
-#Escalas los valores, ejemplo logaritmica
-plt.xscale('log') #poner en escala logaritmica el axis "X"
+# Escalas los valores, ejemplo logaritmica
+plt.xscale('log')  # poner en escala logaritmica el axis "X"
 
 # Agregar texto en un punto determinado del grafico
 plt.text(1550, 71, 'India')
@@ -219,44 +226,43 @@ plt.text(5700, 80, 'China')
 # Agregar una grilla para que se visualice mas exacto los puntos
 plt.grid(True)
 
-plt.show() # Imprime
-plt.clf() # limpiar plots para mostrar siguiente plot consecutivo / puedo comprara coportamiento de dos muestras en dos planos
+plt.show()  # Imprime
+plt.clf()  # limpiar plots para mostrar siguiente plot consecutivo / puedo comprara coportamiento de dos muestras en dos planos
 
 
-plt.plot([1,2,3,4,5,6,7])
+plt.plot([1, 2, 3, 4, 5, 6, 7])
 plt.show()
-
 
 
 ############################################################################################################
 SELECTING DATA
 ############################################################################################################
 
-df[col] # Returns column with label col as Series
-df[[col1, col2]] # Returns Columns as a new DataFrame
-s.iloc[0] # Selection by position (selects first element)
-s.loc[0] # Selection by index (selects element at index 0)
-df.iloc[0,:] # First row
-df.iloc[0,0] # First element of first column
+df[col]  # Returns column with label col as Series
+df[[col1, col2]]  # Returns Columns as a new DataFrame
+s.iloc[0]  # Selection by position (selects first element)
+s.loc[0]  # Selection by index (selects element at index 0)
+df.iloc[0, :]  # First row
+df.iloc[0, 0]  # First element of first column
 
 # MELTING / unificar dos columnas en una sola y los valores en una tercera:
 pd.melt(
-    frame=df, 
-    id=vars='name', 
-    value_vars=['campo_1','campo_2']
+    frame=df,
+    id=vars='name',
+    value_vars=['campo_1', 'campo_2']
     var_name='campo',
     value_name='result'
-) # organizar por NAMES los valores del campo_1 y campo_2
+)  # organizar por NAMES los valores del campo_1 y campo_2
 
 # PIVOT / opuesto del melting, separar el diferentes columnas, ayuda a la reporteria lo hace mas amigable
 weather.pivot(
     index='date',
-    columns='element', # esta es la columna a desagregar
+    columns='element',  # esta es la columna a desagregar
     values='value'
 )
 
 
-DICTIONARYS #################################################################################################
+DICTIONARYS
 
 # Definition of countries and capital
 countries = ['spain', 'france', 'germany', 'norway']
@@ -266,50 +272,57 @@ capitals = ['madrid', 'paris', 'berlin', 'oslo']
 ind_ger = countries.index("germany")
 
 # Use ind_ger to print out capital of Germany
-print( capitals[ind_ger] )
+print(capitals[ind_ger])
 
-world = {"afganistan":30.55, "albania":2.77, "algeria":39.21}
+world = {"afganistan": 30.55, "albania": 2.77, "algeria": 39.21}
 world['albania']
 
-del(world['albania']) 			# borra un registro del diccionario
-europe["italy"] = "rome" 		# agreggar u nuevo valor al diccionario ó actualizar un valor al diccionario
+del (world['albania']) 			# borra un registro del diccionario
+# agreggar u nuevo valor al diccionario ó actualizar un valor al diccionario
+europe["italy"] = "rome"
 
-europe['spain']['capital']	# 
+europe['spain']['capital']
 
 
-************ PANDAS **********************************************************************************
+************ PANDAS ** ********************************************************************************
 Dictionary -> DataFrame
 
-#Crear un dataframe y agregarle campos, puede ser en un for
-smc = pd.DataFrame(columns=["campania","codpais","total"])
-smc = smc.append({"campania":campania,"codpais":codpais,"total":total}, ignore_index=True)
+# Crear un dataframe y agregarle campos, puede ser en un for
+smc = pd.DataFrame(columns=["campania", "codpais", "total"])
+smc = smc.append({"campania": campania, "codpais": codpais,
+                 "total": total}, ignore_index=True)
 
 df = pd.DataFrame(dict)
-brics = pd.read_csv("path/to/brics.csv"
-					, index_col=0 				# poner como incide la columna 0
+brics = pd.read_csv("path/to/brics.csv", index_col=0 				# poner como incide la columna 0
 					)
 
-cars.index = ['CL','MX','GT','CO','PE']  		# agregar el index al dataframe
+cars.index = ['CL', 'MX', 'GT', 'CO', 'PE']  		# agregar el index al dataframe
 
-type( df[['campo1','campo2']] )  				#DATAFRAME 1D+ - seleccionar dos campos completos, sigue siendo un dataframe      (varias dimensiones 2D +)
-type( df['campo1'] )							#SERIES 1D- seleccionamos solo los datos, son los valores del campo nada mas (una dimension 1D)
-df[1:4]											#FILAS - seleccionar campos de los indices 1 al 4
+# DATAFRAME 1D+ - seleccionar dos campos completos, sigue siendo un dataframe      (varias dimensiones 2D +)
+type(df[['campo1', 'campo2']])
+# SERIES 1D- seleccionamos solo los datos, son los valores del campo nada mas (una dimension 1D)
+type(df['campo1'])
+df[1:4]  # FILAS - seleccionar campos de los indices 1 al 4
 
-np_array[rows, columns]							#Algo similar a esto en PANDAS es los LOC / ILOC 
-df.loc[ ["ind2","ind3"],["col1","col2"]]		#En Pandas obtendría algo asi, pero con indices conocidos
-df.loc[ :,["col1","col2"]]						#acceder a todas las columnas
-df.loc[[1,4,6],[4,8,9]]							#acceder a filas y columnas especificas
+np_array[rows, columns]  # Algo similar a esto en PANDAS es los LOC / ILOC
+# En Pandas obtendría algo asi, pero con indices conocidos
+df.loc[["ind2", "ind3"], ["col1", "col2"]]
+df.loc[:, ["col1", "col2"]]  # acceder a todas las columnas
+df.loc[[1, 4, 6], [4, 8, 9]]  # acceder a filas y columnas especificas
 
-df.loc[['row1','row2'],["col1","col2"]]			#LOC -> puedes llamar por su nombre, tanto columnas como filas
-df.iloc[[0,2],[1,3]]							#ILOC -> puedes llamar por su indice,  tanto columnas como filas
+# LOC -> puedes llamar por su nombre, tanto columnas como filas
+df.loc[['row1', 'row2'], ["col1", "col2"]]
+# ILOC -> puedes llamar por su indice,  tanto columnas como filas
+df.iloc[[0, 2], [1, 3]]
 
 
-************ NUMPY **********************************************************************************
-arrayy = np.array[(12,345,56,32,54,654,)]		# convertir a array para oeprar mejor
+************ NUMPY ** ********************************************************************************
+# convertir a array para oeprar mejor
+arrayy = np.array[(12, 345, 56, 32, 54, 654,)]
 
-np.logical_and( bmi > 21, bmi < 22)				#resultado como booleans
-bmi[ np.logical_and( bmi > 21, bmi < 22) ]		# resutado del array
-np.logical_or( bmi > 21, bmi < 22 )
+np.logical_and(bmi > 21, bmi < 22)  # resultado como booleans
+bmi[np.logical_and(bmi > 21, bmi < 22)]		# resutado del array
+np.logical_or(bmi > 21, bmi < 22)
 logical_not()
 
 cpc = cars['cars_per_cap']
@@ -317,9 +330,9 @@ between = np.logical_and(cpc > 10, cpc < 80)
 medium = cars[between]
 
 ** RANDOM **
-np.random.rand()								#random entre 0 y 1 (generado pseudoaleatorio, en base a una semilla)
-np.random.seed(123)								#definir una semilla por ejemplo para pruebas
-np.random.randint(0,2)							#entero que puede ser 0 o 1 (el 2 no se incluye)
+np.random.rand()  # random entre 0 y 1 (generado pseudoaleatorio, en base a una semilla)
+np.random.seed(123)  # definir una semilla por ejemplo para pruebas
+np.random.randint(0, 2)  # entero que puede ser 0 o 1 (el 2 no se incluye)
 
 
 # Transpose np_aw: np_aw_t
@@ -330,32 +343,31 @@ plt.plot(np_aw_t)
 plt.show()
 
 
-
-************ LOOPS / FOR / WHILE **********************************************************************************
+************ LOOPS / FOR / WHILE ** ********************************************************************************
 x = 1
-while x < 4 :
+while x < 4:
     print(x)
     x = x + 1
 
 areas = [11.25, 18.0, 20.0, 10.75, 9.50]
-for index,a in enumerate(areas) :				#Con enumerate obtengo el indice del DF
-    print("room " + str(index) +" : " + str(a))
+for index, a in enumerate(areas):  # Con enumerate obtengo el indice del DF
+    print("room " + str(index) + " : " + str(a))
 
 for k in np.nditer(np_baseball):
     print(k)
 
 for lab, row in brics.iterrows():
-	brics.loc[lab,"name_length"] = len(row['country'])
+	brics.loc[lab, "name_length"] = len(row['country'])
 
 
-******** DATETIME  ***************************************************************+
-import datetime
+******** DATETIME ** *************************************************************+
 
-datetime.datetime.now()  #format date-time
-datetime.datetime.now().date() #solo obtengo al fecha de hoy
+datetime.datetime.now()  # format date-time
+datetime.datetime.now().date()  # solo obtengo al fecha de hoy
 
 date_time_str = '2018-06-29 08:15:27.243860'
-date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S.%f')
+date_time_obj = datetime.datetime.strptime(
+    date_time_str, '%Y-%m-%d %H:%M:%S.%f')
 
 print('Date:', date_time_obj.date())
 print('Time:', date_time_obj.time())
@@ -363,63 +375,75 @@ print('Date-time:', date_time_obj)
 
 date = datetime.strptime('fecha_string', '%d %b %Y %H:%M:%S')
 fecha = datetime.strptime('fecha_string', '%Y-%m-%d').date()
-.apply( lambda x : datetime.strptime(x, '%d %b %Y %H:%M:%S').time())
+.apply(lambda x: datetime.strptime(x, '%d %b %Y %H:%M:%S').time())
 
 
 ############################################################################################################
 CLEANING DATA
-############################################################################################################ 
+############################################################################################################
 If you’re working with real world data, chances are you’ll need to clean it up. These are some helpful methods:
 
-df.columns = ['a','b','c'] # Renames columns
-pd.isnull() # Checks for null Values, Returns Boolean Array
-pd.notnull() # Opposite of s.isnull()
-df.dropna() # Drops all rows that contain null values
-df.dropna(axis=1) # Drops all columns that contain null values
-df.dropna(axis=1,thresh=n) # Drops all rows have have less than n non null values
-df.fillna(x) # Replaces all null values with x
-s.fillna(s.mean()) # Replaces all null values with the mean (mean can be replaced with almost any function from the statistics section)
-s.astype(float) # Converts the datatype of the series to float
-s.replace(1,'one') # Replaces all values equal to 1 with 'one'
-s.replace([1,3],['one','three']) # Replaces all 1 with 'one' and 3 with 'three'
-df.rename(columns=lambda x: x + 1) # Mass renaming of columns
-df.rename(columns={'old_name': 'new_ name'}) # Selective renaming
-df.set_index('column_one') # Changes the index
-df.rename(index=lambda x: x + 1) # Mass renaming of index
+df.columns = ['a', 'b', 'c']  # Renames columns
+pd.isnull()  # Checks for null Values, Returns Boolean Array
+pd.notnull()  # Opposite of s.isnull()
+df.dropna()  # Drops all rows that contain null values
+df.dropna(axis=1)  # Drops all columns that contain null values
+# Drops all rows have have less than n non null values
+df.dropna(axis=1, thresh=n)
+df.fillna(x)  # Replaces all null values with x
+# Replaces all null values with the mean (mean can be replaced with almost any function from the statistics section)
+s.fillna(s.mean())
+s.astype(float)  # Converts the datatype of the series to float
+s.replace(1, 'one')  # Replaces all values equal to 1 with 'one'
+# Replaces all 1 with 'one' and 3 with 'three'
+s.replace([1, 3], ['one', 'three'])
+df.rename(columns=lambda x: x + 1)  # Mass renaming of columns
+df.rename(columns={'old_name': 'new_ name'})  # Selective renaming
+df.set_index('column_one')  # Changes the index
+df.rename(index=lambda x: x + 1)  # Mass renaming of index
 
 
 ##### Filter, Sort and Group By ####################################################################
 Methods for filtering, sorting and grouping your data:
 
-df[df[col] > 0.5] # Rows where the col column is greater than 0.5
-df[(df[col] > 0.5) & (df[col] < 0.7)] # Rows where 0.5 < col < 0.7
-df.sort_values(col1) # Sorts values by col1 in ascending order
-df.sort_values(col2,ascending=False) # Sorts values by col2 in descending order
-df.sort_values([col1,col2], ascending=[True,False]) # Sorts values by col1 in ascending order then col2 in descending order
-dogs.sort_values(["columna","columnb"], acending=[True,False])
-top_3 = sorted(poke_list_np, key=lambda x: x[1], reverse=True)[:3] #encontrado en datacamp
-df.groupby(col) # Returns a groupby object for values from one column
-df.groupby([col1,col2]) # Returns a groupby object values from multiple columns
-df.groupby(col1)[col2].mean() # Returns the mean of the values in col2, grouped by the values in col1 (mean can be replaced with almost any function from the statistics section)
-df.pivot_table(index=col1, values= col2,col3], aggfunc=mean) # Creates a pivot table that groups by col1 and calculates the mean of col2 and col3
-df.groupby(col1).agg(np.mean) # Finds the average across all columns for every unique column 1 group
-df.apply(np.mean) # Applies a function across each column
-df.apply(np.max, axis=1) # Applies a function across each row
-df['texto'].apply(len)	# Longitud de caracteres
+df[df[col] > 0.5]  # Rows where the col column is greater than 0.5
+df[(df[col] > 0.5) & (df[col] < 0.7)]  # Rows where 0.5 < col < 0.7
+df.sort_values(col1)  # Sorts values by col1 in ascending order
+# Sorts values by col2 in descending order
+df.sort_values(col2, ascending=False)
+# Sorts values by col1 in ascending order then col2 in descending order
+df.sort_values([col1, col2], ascending=[True, False])
+dogs.sort_values(["columna", "columnb"], acending=[True, False])
+top_3 = sorted(poke_list_np, key=lambda x: x[1], reverse=True)[
+               :3]  # encontrado en datacamp
+df.groupby(col)  # Returns a groupby object for values from one column
+# Returns a groupby object values from multiple columns
+df.groupby([col1, col2])
+# Returns the mean of the values in col2, grouped by the values in col1 (mean can be replaced with almost any function from the statistics section)
+df.groupby(col1)[col2].mean()
+df.pivot_table(index=col1, values=col2, col3], aggfunc=mean)  # Creates a pivot table that groups by col1 and calculates the mean of col2 and col3
+# Finds the average across all columns for every unique column 1 group
+df.groupby(col1).agg(np.mean)
+df.apply(np.mean)  # Applies a function across each column
+df.apply(np.max, axis=1)  # Applies a function across each row
+df['texto'].apply(len)  # Longitud de caracteres
 
 # All of our three examples used exactly the same groupby() call to begin with:
 df.groupby('day')['total_bill'].mean()
-df.groupby('day').filter(lambda x : x['total_bill'].mean() > 20)
-df.groupby('day')['total_bill'].transform(lambda x : x/x.mean())
+df.groupby('day').filter(lambda x: x['total_bill'].mean() > 20)
+df.groupby('day')['total_bill'].transform(lambda x: x/x.mean())
 
 
 ##### Joining and Combining ####################################################################
 Methods for combining two dataframes:
 
-df1.append(df2) # Adds the rows in df1 to the end of df2 (columns should be identical)
-pd.concat([df1, df2],axis=1) # Adds the columns in df1 to the end of df2 (rows should be identical)
-df1.join(df2,on=col1,how='inner') # SQL-style joins the columns in df1 with the columns on df2 where the rows for col have identical values. 
-									#how can be one of 'left', 'right', 'outer', 'inner'
+# Adds the rows in df1 to the end of df2 (columns should be identical)
+df1.append(df2)
+# Adds the columns in df1 to the end of df2 (rows should be identical)
+pd.concat([df1, df2], axis=1)
+# SQL-style joins the columns in df1 with the columns on df2 where the rows for col have identical values.
+df1.join(df2, on=col1, how='inner')
+									# how can be one of 'left', 'right', 'outer', 'inner'
 
 
 
@@ -428,12 +452,12 @@ EXPORT FILE
 ##### Writing Data ####################################################################
 And finally, when you have produced results with your analysis, there are several ways you can export your data:
 
-df.to_csv(filename) # Writes to a CSV file
-df.to_excel(filename) # Writes to an Excel file
-df.to_sql(table_name, connection_object) # Writes to a SQL table
-df.to_json(filename) # Writes to a file in JSON format
-df.to_html(filename) # Saves as an HTML table
-df.to_clipboard() # Writes to the clipboard
+df.to_csv(filename)  # Writes to a CSV file
+df.to_excel(filename)  # Writes to an Excel file
+df.to_sql(table_name, connection_object)  # Writes to a SQL table
+df.to_json(filename)  # Writes to a file in JSON format
+df.to_html(filename)  # Saves as an HTML table
+df.to_clipboard()  # Writes to the clipboard
 
 
 ##### Machine Learning ####################################################################
@@ -451,17 +475,17 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.externals import joblib
 # Load red wine data.
-dataset_url = 'http://mlr.cs.umass.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv'
-data = pd.read_csv(dataset_url, sep=';')
+dataset_url='http://mlr.cs.umass.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv'
+data=pd.read_csv(dataset_url, sep=';')
 # Split data into training and test sets
-y = data.quality
-X = data.drop('quality', axis=1)
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.2,
-                                                    random_state=123,
-                                                    stratify=y)
+y=data.quality
+X=data.drop('quality', axis=1)
+X_train, X_test, y_train, y_test=train_test_split(X, y,
+                                                    test_size = 0.2,
+                                                    random_state = 123,
+                                                    stratify = y)
 # Declare data preprocessing steps
-pipeline = make_pipeline(preprocessing.StandardScaler(),
+pipeline=make_pipeline(preprocessing.StandardScaler(),
                          RandomForestRegressor(n_estimators=100))
 # Declare hyperparameters to tune
 hyperparameters = { 'randomforestregressor__max_features' : ['auto', 'sqrt', 'log2'],
@@ -570,7 +594,7 @@ def count_entries(df, *args):
     """Return a dictionary with counts of
     occurrences as value for each key."""
     
-    #Initialize an empty dictionary: cols_count
+    # Initialize an empty dictionary: cols_count
     cols_count = {}
     
     # Iterate over column names in args
@@ -764,7 +788,7 @@ for row in poke_stats:
 
 ############################################## Writing better ############################################## 
 
-## Moving calculations above a loop
+# Moving calculations above a loop
 
 # Import Counter
 from collections import Counter
@@ -856,11 +880,11 @@ type(madrid_image)
 
 ######    COLORES CApAS RGB   ###########################################################
 # Colors with Python
-#Obtaining the red values of the image
+# Obtaining the red values of the image
 red = image[:,:,0]
-#Obtaining the green values of the image
+# Obtaining the green values of the image
 green = image[:,:,1]
-#Obtaining the blue values of the image
+# Obtaining the blue values of the image
 blue = image[:,:,2]
 
 ######    ESCALA DE GRISES   ###########################################################
@@ -903,9 +927,9 @@ MATPLOTLIB tiene un método de HISTOGRAMMM / PLOTEAR UN HISTOGRAMA DE IMAGEN
 - Toma una MATRIZ de entrada(Feecuencia) y BINS como parámetros
 - RAVEL devuelve una matriz aplanada continua a partir de la matriz
 - Definimos 256, porque mostraremos todos los números de pixeles existentes, de 0 a 255
-#Red color of the image
+# Red color of the image
 red = image[:, :, 0]
-#OBtain the red Histogram
+# OBtain the red Histogram
 plt.hist(red.ravel(), bins = 256)
 
 
@@ -997,7 +1021,7 @@ VEREMOS FILTROSSSSS:
 
 - FUNCION SOBEL, es muy utilizada, requiere de una imágene escala de GRISES bidimensional.
 from skimage.filters import sobel
-#Apply edge detection filter
+# Apply edge detection filter
 edge_sobel = sobel(image_coins)
 plot_comparasion(image_coins, edge_sobel, "Edge with Sobel")
 
@@ -1006,7 +1030,7 @@ Usado para enfocar una imagen o para REDUCIR el RUIDO
 Diosminuye los BORDES y reducirá el CONTRASTE
 Se usa en otras técnicas como el filtrado ANTI-ALIASING FILTERING.
 from skimage.filters import gaussian
-#Apply edge detection filter
+# Apply edge detection filter
 gaussian_image = gaussian(amsterdam_pic, multichannel=True)  # Multicanal en True si es de COLOR, sino False
 # Show original and resulting image to compare
 plot_comparison(amsterdam_pic, gaussian_image, "Blurred with Gaussian filter")
@@ -1098,7 +1122,7 @@ OPERACIONES BÄSICAS:
     Elimina PIxeles en lso límites de los objetos
     EROSION BINARIA
     from skimage import morphology
-    #Con esto podemos configurar opcionalmente un elemento de estructuración para usar la operación:
+    # Con esto podemos configurar opcionalmente un elemento de estructuración para usar la operación:
     selem = rectangle(12,6) #Utilizamos Rectangulo porque tiene algo de forma del caballo de la imagen que queremos obtener.
     # Si no definimos el "elemento estructurado" utilizara por default la CRUZ
     enroded_image = morphology.binary_erosion(image_horse, selem=selem)
@@ -1125,9 +1149,9 @@ UTILIZADO para ARREGLAR imagenes dañadas, eliminar TEXTOS, Eiminar LOGOS, elimi
     Recupera Automaticamente explotando la información presentada en las regiones NO DAÑADAS de la imagen.
     COn la función BIHARMONIC INPAINT, necesitamos ubicar los pixeles DAÑADOS, como una imagen de MASCARA en la parte superior de la imagen para trabajar.
     from skimage.restoration import inpaint
-    #Obtain the mask
+    # Obtain the mask
     mask = get_mask(defect_image) # OSea este get_mask() es una función en duro que definimos que pixeles vamos a corregir, se llenan con 1
-    #Apply
+    # Apply
     restored_image = inpaint.inpaint_biharmonic(defect_image, mask, multichannel=True)
 
     Para definir la MASCARA AUTOMATICAMENTE(segmento de pixeles negros, osea faltantes, errados = 1) se necesitará utilizar THRESHOLDING o SEGMENTACION para hacerlo.
@@ -1228,9 +1252,9 @@ UTILIZADO para ARREGLAR imagenes dañadas, eliminar TEXTOS, Eiminar LOGOS, elimi
             # Make the image grayscale
             cimage = color.rgb2gray(image)
         - BINARIXE THE IMAGE
-            #Obtain the thresh value
+            # Obtain the thresh value
             thresh = threshold_otsu(image)
-            #Apply Thresholding
+            # Apply Thresholding
             thresholded_image = image > thresh
     2. CONTAMOS CONTORNOS
         Esta función encuentra las CURVAS de nivel o une puntos(pixeles) de una elevación igual o brillo en una matriz 2D, por encima de un valor de nivel dado.
@@ -1292,7 +1316,7 @@ Los bordes pueden ser tmb la intersección de DOS BORDES.
     - Matching Corners
     - Harris Corners Detector (Algoritmo bien usado para Computer Vision)
         from image.feature import corner_harris, corner_peaks
-        #Convert image to grayscale
+        # Convert image to grayscale
         image = rgb2gray(image)
         # Apply the Harris corners to the image / Al aplicar esto solo se muestran algúna slineas negras candidatas a aplicar la detecciónd de esquinas
         measure_image = corner_harris(image)
@@ -1465,21 +1489,21 @@ import pandas as pd
 from io import BytesIO
 import gzip
 import re
-#import sys
+# import sys
 import subprocess
 from datetime import datetime, timedelta
 import os
 
-#if sys.version_info[0] < 3:
+# if sys.version_info[0] < 3:
 #    from StringIO import StringIO # Python 2.x
-#else:
+# else:
 #    from io import StringIO # Python 3.x
 
 # Parametros de Conexion
 S3_BUCKET_NAME_LOADED= 'belc-bigdata-landing-dlk-prd'
 S3_PATH_FILES= 'lan-virtualcoach/input/data-hybris-datadeldia/'
 
-#parte de nombre de archivo
+# parte de nombre de archivo
 dia = timedelta(days=1)
 start_time = datetime.now()
 if (start_time-dia).month < 10:
@@ -1497,7 +1521,7 @@ origin_zip_file = "belc-bigdata-landing-dlk-prd/lan-virtualcoach/input/data-hybr
 dest_zip_file = "s3://belc-bigdata-landing-dlk-prd/lan-virtualcoach/input/Register/"
 remove_zip_file = "s3://belc-bigdata-landing-dlk-prd/lan-virtualcoach/input/Register/"+zipFile
 
-#Conexion con el bucket de S3
+# Conexion con el bucket de S3
 s3 = boto3.client('s3')
 
 # Definicion de variables
@@ -1516,28 +1540,28 @@ for files in listfiles[1:]:
     s3 = boto3.resource('s3')
     key= files #'lan-virtualcoach/input/data-hybris/2019-07-06.json.gz'
     s = key
-    #filtro de solo archivos que están luego de los caracteres "data-hybris/"
+    # filtro de solo archivos que están luego de los caracteres "data-hybris/"
     ss = re.findall('data-hybris-datadeldia/(.*)', s)
     for i in ss:
-        #print(i, end="")
+        # print(i, end="")
         data = i
         NameFiles.append(data)
-        #print(data)
+        # print(data)
     obj = s3.Object(S3_BUCKET_NAME_LOADED, key)
     dato = obj.get()['Body'].read()
     gzipfile = BytesIO(dato)
     gzipfile = gzip.GzipFile(fileobj=gzipfile)
     content = gzipfile.read()
     json_str = content.decode("utf-8")
-    #data = json.loads(json_str)
+    # data = json.loads(json_str)
     number = json_str.count('\n')
     n.append(number)
     # print(n)
     # print(NameFiles)
-    #raise e
-#remove file from register
-#client.Object(S3_BUCKET_NAME_LOADED,'lan-virtualcoach/input/Register/'+zipFile).delete()
-#print('the zip file has been removed it from Register')
+    # raise e
+# remove file from register
+# client.Object(S3_BUCKET_NAME_LOADED,'lan-virtualcoach/input/Register/'+zipFile).delete()
+# print('the zip file has been removed it from Register')
 
 # Unir ambas listas de registros y files
 d =  {'Files':NameFiles,'Registers':n}
@@ -1545,19 +1569,19 @@ print(NameFiles)
 print(n)
 # Transformar a dataframe
 df = pd.DataFrame(d)
-#imprimir el dataframe como csv
+# imprimir el dataframe como csv
 df.to_csv('Reporte_Registros.csv', sep='\t', encoding='utf-8', index=False)
-#print
+# print
 print(df)
 
 
 #####################################################################################################
 
 
-## PANDASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+# PANDASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 ------------------------------------------------------------------------ 
-## CASTEAR DATOS COLUMNARES
+# CASTEAR DATOS COLUMNARES
 ------------------------------------------------------------------------ 
 print(df.dtypes)
 
@@ -1587,7 +1611,7 @@ if df[col].dtypes == object
 
 
 ------------------------------------------------------------------------ 
-## MANIPULAR VACIOS
+# MANIPULAR VACIOS
 ------------------------------------------------------------------------ 
 # replacing na values in college with No college
 nba["College"].fillna("No College", inplace = True)
@@ -1624,7 +1648,7 @@ df = df.drop(df[(df.score < 50) & (df.score > 20)].index)
 
 
 ------------------------------------------------------------------------ 
-## RENAME COLUMNS / RENOMBRAR COLUMNAS
+# RENAME COLUMNS / RENOMBRAR COLUMNAS
 ------------------------------------------------------------------------ 
 df_renamed_multiple = data.rename(
     columns={
@@ -1701,7 +1725,7 @@ df_misiones_tmp['poc'] = df_misiones_tmp['poc'].astype(str).str.strip()
 
 # Crear dataset dummy
 ------------------------------------------------------------------------
-#data dummy
+# data dummy
 import numpy as np
 df1 = pd.DataFrame({'key': ['A', 'B', 'C', 'D'],
                      'value': np.random.randn(4)})
