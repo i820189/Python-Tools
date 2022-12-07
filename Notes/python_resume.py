@@ -261,6 +261,18 @@ weather.pivot(
     values='value'
 )
 
+tmp11 = df_testops_final.groupby(['key2','group']).size().reset_index(name='tot').pivot(
+  index='key2',
+  columns='group',
+  values='tot'
+).reset_index()
+
+tmp11['porc_control'] =  tmp11['Control'] / (tmp11['Test']+tmp11['Test sin Cambios']+tmp11['Control'])
+tmp11.sort_values('porc_control', ascending=False).head(20)
+
+
+-----------------------
+
 
 DICTIONARYS
 
@@ -1753,7 +1765,7 @@ re_misiones_no[re_misiones_no['sku'].isin(['NO27', 'NO19','NO27'])].head(5)
 spark = SparkSession.builder.appName('df_').getOrCreate()
 df_sql = spark.createDataFrame(df_) 
 df_sql.createOrReplaceTempView("df_sql_")
-spark.sql("""
+tabla = spark.sql("""
 select
   poc,count(distinct file)
 from df_sql_
@@ -1794,3 +1806,96 @@ data.to_csv('/path/to/save/the/data.csv', index=False)
 
 
 # COMO COMPLETAR DE COLUMNAS IGUAL A OTRO DATAFRAME, 
+
+
+/***************************************************************************************************/
+[ BACKUSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS ] 
+/***************************************************************************************************/
+
+df = pd.read_excel(f"/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202211/Base_ejecucion_noviembre_balanceada_v2.xlsx",
+                  sheet_name='BASE_INICIAL'
+                  )
+print( df.shape )
+print( df.columns )
+
+df=pd.read_csv('/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202210/output_challengues/raw/master_table_pop_202211_v2.csv'
+               ,encoding='latin1').dropna(axis=0, how="all").drop_duplicates()
+print( df.shape )
+print( df.columns )
+
+
+df_sku.columns = ['CODIGO SKU','brand','Pack','Package']
+
+df_all_misiones = df_all_misiones[ df_all_misiones.brand!='0' ].copy()
+
+
+/***************************************************************************************************/
+# REEMPLAZAR O ACTUALIZAR UN CAMPO CON CONDICION DE OTRO
+df_all_misiones.loc[df_all_misiones['sku'].isin([18083,18082]),'brand']='P.Callao'
+df_all_misiones.loc[df_all_misiones['sku'].isin([18083,18082]),'Pack']='355 CAN'
+df_all_misiones.loc[df_all_misiones['sku'].isin([17893]),'brand']='P.Callao'
+df_all_misiones.loc[df_all_misiones['sku'].isin([17893]),'Pack']='305 RB'
+/***************************************************************************************************/
+
+
+
+
+/***************************************************************************************************/
+spark = SparkSession.builder.appName('df_mision_ejecucion').getOrCreate()
+df_mision_ejecucion_ = spark.createDataFrame(df_mision_ejecucion)
+df_mision_ejecucion_.write.mode("overwrite").saveAsTable("abi_lh_portfolio.lh_pop_pe_ejecucion")
+
+%sql
+DELETE FROM abi_lh_portfolio.b2b2c_audience_cat_PE WHERE periodo = '202210';
+INSERT INTO abi_lh_portfolio.b2b2c_audience_cat_PE
+select *  from tmp_testops WHERE periodo = '202210';
+
+/***************************************************************************************************/
+
+
+df_ = spark.sql("""
+   select * from "tu tabla"
+""")
+
+df_.toPandas().to_csv('/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/Lighthouse_BIT/tu_csv_aqui.csv')
+# b2b2c_audience_pocs.toPandas().head()
+
+/***************************************************************************************************/
+
+
+
+df_cobertura_adic=df_cobertura_adic[(df_cobertura_adic.flag_pop==1)&
+                                    (df_cobertura_adic.type!='Generate Demand')&
+                                    (df_cobertura_adic.flag_prioridad==1)].copy()
+
+df_cobertura_adic.shape
+
+
+/***************************************************************************************************/
+
+
+b2b2c_audience_pocs = spark.sql("""
+   select 
+    'PE' as country,
+    poc as client,
+    audience_key,
+    'BottomUp' as audience,
+    brand_x as subaudience,
+    month,
+    year,
+    proba as probability,
+    '' as vol_potential,
+    Group as control_poc,
+    StartDate-1 as timestmp
+    --count(*)
+  from tmp_202209
+  --where sku_final <> 'mkpl'
+  where Group in ('Test','Test sin Cambios')
+  and length(sku_final) in (4,5)
+  group by 1,2,3,4,5,6,7,8,9,10,11
+""")
+
+df_b2b2c_audience_pocs = b2b2c_audience_pocs.toPandas()
+df_b2b2c_audience_pocs.head()
+
+

@@ -1,3 +1,77 @@
+
+
+# ***************************************************
+# IMPORTAR import
+# ***************************************************
+grupos_ = spark.sql(""" select * from abi_lh_portfolio.lh_pop_pe_group_client """).toPandas()
+
+df_ = spark.read.csv('dbfs:/mnt/adls_maz131/analytics_zone/MAZ/PE/master_tables/deal_condition/dc_sales.csv',header=True, inferSchema=True)
+
+# de pandas
+df_client=pd.read_csv('/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Data/PEDemographics/TelefonicaClient.csv')
+df_client_sparkDF=spark.createDataFrame(df_client)
+df_client_sparkDF=df_client_sparkDF.select(df_client_sparkDF.Cliente,df_client_sparkDF.Latitud,df_client_sparkDF.Longitud)
+
+# pyspark
+df_mt = spark.read.\
+        option("delimiter",",").\
+        option("header","true").\
+        option("encoding", "windows-1252").\
+        option("inferSchema", "true").\
+        option("header", "true").\
+        csv("dbfs:/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202212/master_table_pop.csv")
+
+df_mt = df_mt.withColumn('date_process_db_lhpe', current_timestamp())
+df_mt = df_mt.dropDuplicates()
+df_mt = df_mt.withColumn("poc",col("poc").cast(IntegerType())) \
+        .withColumn("sku",col("sku").cast(IntegerType()))
+        
+        
+
+# /***************************************************************************************************/
+spark = SparkSession.builder.appName('df_mision_ejecucion').getOrCreate()
+df_mision_ejecucion_ = spark.createDataFrame(df_mision_ejecucion)
+df_mision_ejecucion_.write.mode("overwrite").saveAsTable("abi_lh_portfolio.lh_pop_pe_ejecucion")
+
+%sql
+DELETE FROM abi_lh_portfolio.b2b2c_audience_cat_PE WHERE periodo = '202210';
+INSERT INTO abi_lh_portfolio.b2b2c_audience_cat_PE
+select *  from tmp_testops WHERE periodo = '202210';
+
+# /***************************************************************************************************/
+# encoding
+df_mt = spark.read.\
+        option("delimiter",",").\
+        option("header","true").\
+        option("encoding", "windows-1252").\
+        option("inferSchema", "true").\
+        option("header", "true").\
+        csv("dbfs:/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Pop Ouput/202212/master_table_pop.csv")
+
+df_mt = df_mt.withColumn('date_process_db_lhpe', current_timestamp())
+df_mt = df_mt.dropDuplicates()
+df_mt = df_mt.withColumn("poc",col("poc").cast(IntegerType())) \
+        .withColumn("sku",col("sku").cast(IntegerType()))
+
+df_mt = df_mt.withColumn("periodo", lit(202212)) # VARIABLE EN DURO
+display(df_mt)
+
+
+
+
+
+# ***************************************************
+# EXPORTAR export
+# ***************************************************
+spark = SparkSession.builder.appName('reporte_telesales_').getOrCreate()
+reporte_telesales_spark = spark.createDataFrame(reporte_telesales_)
+reporte_telesales_spark.select("*").write.format('com.crealytics.spark.excel').option("header","true").option("inferSchema","true").save(output_report, mode="overwrite")
+print(output_report)
+
+
+# ***************************************************
+# FUNCTIONS / FUNCIONES
+# ***************************************************
 df.count()
 df.columns
 df.types
@@ -5,14 +79,15 @@ df.schema
 df.printSchema()
 
 
-# SELECT
-# **********************************************************************************************************
+# ***************************************************
+# SELECT / SELECCIONAR
+# ***************************************************
 df.select("id", "name").show()
 
 
-
-# FILTER
-# **********************************************************************************************************
+# ***************************************************
+# FILTER / FILTRAR
+# ***************************************************
 df.filter(df['id'] == 1).show()
 df.filter(df.id == 1 ).show()
 df.filter(col("id") == 1).show()
@@ -20,15 +95,17 @@ df.filter("id = 1").show()
 
 
 
-# DROP
-# **********************************************************************************************************
+# ***************************************************
+# DROP / BORRAR / ELIMINAR
+# ***************************************************
 newdf = df.drop("id")  # es innutable nos e eilimna, sino creo una copia
 newdf.show(2)
 
 
 
-# AGGREFATIONS
-# **********************************************************************************************************
+# ***************************************************
+# AGREGACIONES  /GROUP BY 
+# ***************************************************
 (
     df.groupBy("dept")
         .agg(
@@ -54,16 +131,125 @@ display(
 )
 
 
+# ***************************************************
 # SORTING
-# **********************************************************************************************************
+# ***************************************************
 df.sort("salary").show(5)
 df.sort(desc("salary")).show(5)
 
 
-# COLUMNAS DERIVADAS
-# **********************************************************************************************************
+# ***************************************************
+# CASTEO de variables, tipo de datos
+# ***************************************************
+
+# withColumn() – Change Column Type
+from pyspark.sql.functions import col
+from pyspark.sql.types import StringType,BooleanType,DateType
+
+df2 = df.withColumn("age",col("age").cast(StringType())) \
+    .withColumn("isGraduated",col("isGraduated").cast(BooleanType())) \
+    .withColumn("jobStartDate",col("jobStartDate").cast(DateType()))
+    
+df2.printSchema()
+
+# selectExpr() – Change Column Type
+df3 = df2.selectExpr("cast(age as int) age",
+    "cast(isGraduated as string) isGraduated",
+    "cast(jobStartDate as string) jobStartDate")
+
+df3.printSchema()
+df3.show(truncate=False)
+
+# SQL – Cast using SQL expression
+df3.createOrReplaceTempView("CastExample")
+
+df4 = spark.sql("SELECT STRING(age),BOOLEAN(isGraduated),DATE(jobStartDate) from CastExample")
+
+df4.printSchema()
+df4.show(truncate=False)
+
+
+# ***************************************************
+# NULOS / null / missing
+# *************************************************** 
+# Los valores NULL siempre son difíciles de manejar independientemente del Framework o lenguaje que usemos. 
+# Aquí en Spark tenemos pocas funciones específicas para lidiar con valores NULL.
+
+# isnull()
+    # Esta función nos ayudará a encontrar los valores nulos para cualquier columna dada. 
+    # Por ejemplo si necesitamos encontrar las columnas donde las columnas id contienen los valores nulos.
+    newdf = df.filter(df["dept"].isNull()) # filtro los valores Nulos
+    newdf.show()
+# isNotNull()
+    newdf = df.filter(df["dept"].isNotNull())
+    newdf.show()
+    
+# fillna()
+    # Esta función nos ayudará a reemplazar los valores nulos.
+    newdf = df.fillna("INVALID", ["dept"])
+    newdf.show()
+    
+# dropna()
+    # Esta función nos ayudará a eliminar las filas con valores nulos.
+    newdf = df.dropna() # Remove all rows which contains any null values.
+    newdf.show()
+    # Elimina todas las filas que contienen todos los valores nulos.
+    newdf = df.dropna(how = "all")
+    newdf.show()
+    # Elimina todas las filas que contiene al menos un valor nulo
+    newdf = df.dropna(how = "any") # default
+    newdf.show()
+    # Remove all rows where columns : dept is null.
+    newdf = df.dropna(subset = "dept")
+    newdf.show()
+
+# ***************************************************
+# COLUMNA DERIVADA - NUEVA COLUMNA , nuevo campo - NEW COLUMN
+# *************************************************** 
 df.withColumn("bonus", col("salary")* .1).show(5)
 
+# Add new constanct column
+from pyspark.sql.functions import lit
+df.withColumn("bonus_percent", lit(0.3)) \
+  .show()
+
+# Add New column with NULL
+df.withColumn("DEFAULT_COL", lit(None)) \
+  .show()
+
+#Add column from existing column
+df.withColumn("bonus_amount", df.salary*0.3) \
+  .show()
+#Add column by concatinating existing columns
+from pyspark.sql.functions import concat_ws
+df.withColumn("name", concat_ws(",","firstname",'lastname')) \
+  .show()
+
+#Add Column Value Based on Condition
+from pyspark.sql.functions import when
+df.withColumn("grade", \
+   when((df.salary < 4000), lit("A")) \
+     .when((df.salary >= 4000) & (df.salary <= 5000), lit("B")) \
+     .otherwise(lit("C")) \
+  ).show()
+
+# Add Column When not Exists on DataFrame
+if 'dummy' not in df.columns:
+   df.withColumn("dummy",lit(None))
+
+# Add column using select
+df.select("firstname","salary", lit(0.3).alias("bonus")).show()
+df.select("firstname","salary", lit(df.salary * 0.3).alias("bonus_amount")).show()
+df.select("firstname","salary", current_date().alias("today_date")).show()
+
+#Add columns to DataFrame using SQL
+df.createOrReplaceTempView("PER")
+df2=spark.sql("select firstname,salary, '0.3' as bonus from PER")
+df3=spark.sql("select firstname,salary, salary * 0.3 as bonus_amount from PER")
+df4=dfspark.sql("select firstname,salary, current_date() as today_date from PER")
+df5=spark.sql("select firstname,salary, " +
+          "case salary when salary < 4000 then 'A' "+
+          "else 'B' END as grade from PER")
 
 # JOINS
 # **********************************************************************************************************
@@ -105,6 +291,8 @@ df.write.saveAsTable("DB_NAME.TBL_NAME", path=<location_of_external_table>)
 # READ / CREAR DATAFRAME DESDE UN CSV
 # **********************************************************************************************************
 df = spark.read.csv("path_to_csv_file", sep="|", header=True, inferSchema=True) # InferSchema, infiere el tipo de dato de cada variable
+
+spark = SparkSession.builder.appName('POP Census').getOrCreate()
 
 
 
@@ -258,38 +446,7 @@ relational_df.write.format('jdbc')
     newdf.show()
     
     
-### NULL VALUES
-# **********************************************************************************************************    
-# Los valores NULL siempre son difíciles de manejar independientemente del Framework o lenguaje que usemos. 
-# Aquí en Spark tenemos pocas funciones específicas para lidiar con valores NULL.
 
-    # isnull()
-        # Esta función nos ayudará a encontrar los valores nulos para cualquier columna dada. 
-        # Por ejemplo si necesitamos encontrar las columnas donde las columnas id contienen los valores nulos.
-        newdf = df.filter(df["dept"].isNull()) # filtro los valores Nulos
-        newdf.show()
-    # isNotNull()
-        newdf = df.filter(df["dept"].isNotNull())
-        newdf.show()
-        
-    # fillna()
-        # Esta función nos ayudará a reemplazar los valores nulos.
-        newdf = df.fillna("INVALID", ["dept"])
-        newdf.show()
-        
-    # dropna()
-        # Esta función nos ayudará a eliminar las filas con valores nulos.
-        newdf = df.dropna() # Remove all rows which contains any null values.
-        newdf.show()
-        # Elimina todas las filas que contienen todos los valores nulos.
-        newdf = df.dropna(how = "all")
-        newdf.show()
-        # Elimina todas las filas que contiene al menos un valor nulo
-        newdf = df.dropna(how = "any") # default
-        newdf.show()
-        # Remove all rows where columns : dept is null.
-        newdf = df.dropna(subset = "dept")
-        newdf.show()
         
         
         
@@ -363,6 +520,9 @@ dbutils.data.help()
     import numpy # importamos la librería
     dbutils.library.list() # listamos las librerías instaladas
     
+    import sys
+    !{sys.executable} -m pip install unidecodedata
+    
     ### UTILIDAD DE NOTEBOOK
     # *************************************************************************
     # los notebook son modulares, podemos tener varios notebooks
@@ -412,4 +572,37 @@ dbutils.data.help()
 
     print(dbutils.widgets.get("your_name_text"))
     
+
+    
+    cols_join_data=''
+    tablas=['df3_1', 'cte_ageb', 'df_p','df_c','df_pib','df_idh','df_ind_edu','df_ind_salud','df_ind_ingr','pct_Marca','pct_Cupo','pct_Linea','df4','df5','df6','pct_Mix','pct_Mix2']
+    d={'cve_ent':2,'cve_mun':3,'cve_loc':4}
+    
+    for i in tablas:
+        #res=spark.sql("select * from abi_maz_lighthouse_rpt.%s limit 1"%(i))
+        res=spark.sql("select * from %s limit 1"%(i))
+    
+    for c in res.columns:
+        if c.lower()=='null':
+        continue
+        if c.lower()=='CodigoDeDestinatarioCorto'.lower():
+        continue
+        else:
+        if c in d.keys():
+            c = "lpad(string(%s.%s),%d,'0') %s"%(i,c,d[c],c)
+        else:
+            c=i+'.'+c
+        if cols_join_data=='':
+            cols_join_data=c
+        else:
+            cols_join_data=cols_join_data+','+c
+    cols_join_data='cte_ageb.codigodedestinatariocorto,'+cols_join_data
+    
+    
+### Rename columns, renombrar columna
+df2 = df.withColumnRenamed("dob","DateOfBirth") \
+    .withColumnRenamed("salary","salary_amount")
+    
+# DROP Duplicate  /borrar o eliminar duplicados
+
     

@@ -19,3 +19,11 @@ df.groupby(col1).agg(np.mean)
 
 # Crear dataframe desde otro dataframe
 df_brand = pd.DataFrame(df_misiones__['brandto'].unique(),  columns = ['brandto'])
+
+
+#  AGREGAR USANDO PIVOT
+temporal=pd.pivot_table(df_trx, 
+                        index=['ship_to_customer_code','brand','pack'],
+                        aggfunc={'periodo':'nunique','volume':'sum'}
+                        ).reset_index()
+temporal.shape
