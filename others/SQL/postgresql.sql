@@ -1,0 +1,31 @@
+
+
+-- # FECHAS
+
+-- DATEPART
+SELECT date_part('month',TIMESTAMP '2017-09-30');
+SELECT date_part('year',TIMESTAMP '2017-01-01');
+SELECT date_part('quarter',TIMESTAMP '2017-01-01');
+SELECT date_part('week',TIMESTAMP '2017-09-30');
+SELECT date_part('day',TIMESTAMP '2017-03-18 10:20:30');
+SELECT date_part('hour',TIMESTAMP '2017-03-18 10:20:30') h,
+       date_part('minute',TIMESTAMP '2017-03-18 10:20:30') m,
+       date_part('second',TIMESTAMP '2017-03-18 10:20:30') s;
+
+--EXTRACT
+SELECT EXTRACT(YEAR FROM TIMESTAMP '2016-12-31 13:30:15');
+SELECT EXTRACT(DAY FROM TIMESTAMP '2016-12-31 13:30:15');
+SELECT EXTRACT(MONTH FROM TIMESTAMP '2016-12-31 13:30:15');
+SELECT EXTRACT(HOUR FROM TIMESTAMP '2016-12-31 13:30:15');
+
+--DATE_TRUNC
+SELECT DATE_TRUNC('hour', TIMESTAMP '2017-03-17 02:09:30');
+> 2017-03-17 02:00:00
+
+SELECT date_trunc('minute', TIMESTAMP '2017-03-17 02:09:30');
+> 2017-03-17 02:09:00
+
+
+-- PERIODO ACTUAL
+(date_part('year',current_date)::int*100 + date_part('month',current_date)::int) as periodo
+
