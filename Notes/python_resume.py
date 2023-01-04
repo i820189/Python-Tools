@@ -111,6 +111,7 @@ main_dict = {}
 for col in cols:
     main_dict[col] = []
 
+
 for line in data3:
     values = line.strip().split(",")
     for i in range(len(cols)):
@@ -388,6 +389,9 @@ print('Date-time:', date_time_obj)
 date = datetime.strptime('fecha_string', '%d %b %Y %H:%M:%S')
 fecha = datetime.strptime('fecha_string', '%Y-%m-%d').date()
 .apply(lambda x: datetime.strptime(x, '%d %b %Y %H:%M:%S').time())
+
+
+
 
 
 ############################################################################################################
