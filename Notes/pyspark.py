@@ -296,7 +296,7 @@ spark = SparkSession.builder.appName('POP Census').getOrCreate()
 
 
 
-# GUARDAR / GUARDAR DATAFRAME A UN CSV
+# GUARDAR / GUARDAR DATAFRAME A UN CSV / EXPORTAR
 # **********************************************************************************************************
 df.write.csv("path_to_CSV_file", sep="|", header=True, mode="overwrite")
 
@@ -605,4 +605,16 @@ df2 = df.withColumnRenamed("dob","DateOfBirth") \
     
 # DROP Duplicate  /borrar o eliminar duplicados
 
+#utilitarios sql pyspark
     
+spark.sql("select * from abi_maz_lighthouse_rpt.df_c0_aux").groupBy("CodigoDeDestinatarioCorto").pivot("TA_RANGO").agg(first("val")).write.saveAsTable('abi_maz_lighthouse_rpt.df_c0')
+
+columns=spark.sql("select * from abi_maz_lighthouse_rpt.aux0 limit 1")
+for i in columns.columns:
+  spark.sql("update abi_maz_lighthouse_rpt.aux0 set %s=0 where %s is null"%(i,i))
+  
+  
+%python
+from pyspark.sql.functions import avg
+
+display(diamonds.select("color","price").groupBy("color").agg(avg("price")).sort("color"))
