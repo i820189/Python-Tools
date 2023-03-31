@@ -390,6 +390,9 @@ fecha = datetime.strptime('fecha_string', '%Y-%m-%d').date()
 .apply(lambda x: datetime.strptime(x, '%d %b %Y %H:%M:%S').time())
 
 
+
+
+
 ############################################################################################################
 CLEANING DATA
 ############################################################################################################
@@ -1586,6 +1589,79 @@ df.to_csv('Reporte_Registros.csv', sep='\t', encoding='utf-8', index=False)
 # print
 print(df)
 
+UNIFICAR VARIOS ARCHIVOS:
+    
+# Función agrupadora
+
+-------
+def agrup_invoice(list_invoice):
+    
+    df_trx=pd.DataFrame()
+    for i in list_invoice:
+        df=pd.read_csv(i,low_memory=False)
+        df_trx=pd.concat([df_trx,df],axis=0)
+    
+    print(df_trx.shape)
+    
+    return df_trx
+
+
+list_invoice=[
+  '/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Data/Invoice/invoice_pe_202209.csv',
+  '/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Data/Invoice/invoice_pe_202210.csv',
+  '/dbfs/mnt/adls_maz131/analytics_zone/MAZ/PE/POP/Data/Invoice/invoice_pe_202211.csv'
+]
+
+df_trx=agrup_invoice(list_invoice)
+df_trx.shape
+df_trx.head()
+-------
+
+
+# CALCULO DE PERIODO
+
+---------------
+# Periodo - Definimos el periodo que vamos a procesar, ej 202211
+import datetime
+
+period = int(datetime.datetime.now().year*100 + datetime.datetime.now().month)
+period = 202212
+date_period = str(period)[0:4] + "-" + str(period)[4:6] + "-01"
+
+print(period)
+print(date_period)
+
+# test
+querie = "select '{}' as test,* from abi_lh_promo.sales_dc_pe limit 10".format(date_period)
+print(querie)
+
+#  Traigo al venta de 6 meses atrás
+df_trx = spark.sql("""
+with sales as (
+  select 
+    t1.Fechafacturacion as invoice_date, 
+    t1.CodigoClienteSolicitante as ship_to_customer_code,
+    t1.marca as brand_name,
+    t1.SKU as product_code, 
+    t1.Hectolitros as volume, 
+    t1.NetRevenue, 
+    t1.Linea as category,
+    t1.TipoEnvaseJerarquia as packaging_name,
+    (date_part('year',t1.FechaFacturacion)::int*100 + date_part('month',t1.FechaFacturacion)::int) as periodo,
+    t2.*, 
+    t3.GrupoGerencia as sales_management
+  from abi_lh_promo.sales_dc_pe t1 
+  left join abi_lh_portfolio.products_group_pe t2 on t1.SKU=t2.sku --falta filtropor periodo -aunque dice Roger que es un maestro
+  left join abi_lh_promo.clients_pe t3 on (t1.CodigoClienteSolicitante=t3.CodigoClienteCorto)
+  where ADD_MONTHS(LAST_DAY(FechaFacturacion) + 1, -1) between (ADD_MONTHS(LAST_DAY('{}'::date) + 1, -1) - interval '6 Month') and (ADD_MONTHS(LAST_DAY('{}'::date) + 1, -1) - interval '1 Month')
+  --and t2.brand_bain <> 'Marketplace' 
+  --and t3.EstadoCliente = 'Activo' 
+  and t1.CodigoClienteSolicitante not like 'I%' and t1.Hectolitros > 0
+)
+select * from sales
+""".format(date_period,date_period)
+).toPandas()
+---------------
 
 #####################################################################################################
 
@@ -1670,6 +1746,9 @@ df_renamed_multiple = data.rename(
 )
 
 df1 = pd.DataFrame(df1,columns=['State','Score'])
+
+# rennbrar columnas con patron
+bain_cat.columns = [x.lower().replace(" ", "_") for x in bain_cat.columns]
 ------------------------------------------------------------------------
 
 
@@ -1899,3 +1978,93 @@ df_b2b2c_audience_pocs = b2b2c_audience_pocs.toPandas()
 df_b2b2c_audience_pocs.head()
 
 
+
+
+/*****************************************************************/
+SUMAR varias columnas
+/*****************************************************************/
+
+# Sumatoria pero parametrizada!
+dict_demographics_join_vars = {
+   'p_estud_sin_nivel':['p_estud_1'],
+   'p_estud_basica':['p_estud_2', 'p_estud_3', 'p_estud_5'],
+   'p_estud_secundaria':['p_estud_4'],
+   'p_estud_superior':['p_estud_6', 'p_estud_7', 'p_estud_8', 'p_estud_9', 'p_estud_10'],
+   'p_acteco_rural':['p_acteco1', 'p_acteco2'],
+   'p_acteco_manual_obrera':['p_acteco3', 'p_acteco4', 'p_acteco5', 'p_acteco6', 'p_acteco7', 'p_acteco8','p_acteco9', 'p_acteco20'],
+   'p_acteco_profesional':['p_acteco10', 'p_acteco11', 'p_acteco12', 'p_acteco13', 'p_acteco14', 'p_acteco15', 'p_acteco16', 'p_acteco17', 'p_acteco18', 'p_acteco19', 'p_acteco21'],
+   'p_ecivil_union':['p_ecivil_1', 'p_ecivil_3'],
+   'p_ecivil_union':['p_ecivil_2', 'p_ecivil_4', 'p_ecivil_5', 'p_ecivil_6']
+}
+
+
+list_census_select_vars = list(dict_demographics_join_vars.keys()) + ['p_estud_si']
+
+for key, value in dict_demographics_join_vars.items():
+  pdDemographics[key] = pdDemographics[value].sum(axis=1)
+  
+pdDemographics = pdDemographics[list_demographics_select_vars + list_urbanicity_select_vars + list_census_select_vars]
+
+
+
+
+/*****************************************************************/
+
+dict_demographics_join_vars = {'p_edad_18_29':['p_edad_18_19', 'p_edad_20_29'],
+                  'p_nse_ab':['p_nse_a', 'p_nse_b']
+                  }
+
+list_demographics_select_vars = ['Cliente',
+                                 'p_sexo_f',
+                  'p_edad_18_29',
+                  'p_edad_30_39',
+                  'p_edad_40_49',
+                  'p_edad_50_59',
+                  'p_edad_60mas',
+                  'p_nse_ab',
+                  'p_nse_c',
+                  'p_nse_d',
+                  'p_nse_e',
+                  'p_razon_visita_residente',
+                  'p_razon_visita_trabajador',
+                  'p_razon_visita_visitante',
+                  'Region',
+                  'Canal',
+                  'SubCanal',
+                  'Latitud',
+                  'Longitud',
+                  'nombdist',
+                  'nombprov', 
+                  'nombdep','Unidad_Negocio']
+
+for key, value in dict_demographics_join_vars.items():
+  pdDemographics[key] = pdDemographics[value].sum(axis=1)
+
+pdDemographics = pdDemographics[list_demographics_select_vars]
+
+/*****************************************************************/
+
+#Sumatoria con condición del texto
+pedemo['sum_nse']=pedemo.iloc[:, pedemo.columns.str.contains('nse_')].sum(1)
+pedemo['sum_edad']=pedemo.iloc[:, pedemo.columns.str.contains('edad_')].sum(1)
+pedemo['sum_sexo']=pedemo.iloc[:, pedemo.columns.str.contains('sexo_')].sum(1)
+pedemo['sum_razon_visita']=pedemo.iloc[:, pedemo.columns.str.contains('razon_visita_')].sum(1)
+
+# Si calculo la probabilidad pero por condición del texto
+column_names = list(pedemo.columns.values)
+for i in column_names:
+  if i.startswith("nse_"):
+    pedemo['p_'+i]=pedemo[i]/pedemo['sum_nse']
+    pedemo['p_'+i] = pedemo['p_'+i].round(decimals = 2)
+  elif i.startswith("edad_"):
+    pedemo['p_'+i]=pedemo[i]/pedemo['sum_edad']
+    pedemo['p_'+i] = pedemo['p_'+i].round(decimals = 2)
+  elif i.startswith("sexo_"):
+    pedemo['p_'+i]=pedemo[i]/pedemo['sum_sexo']
+    pedemo['p_'+i] = pedemo['p_'+i].round(decimals = 2)
+  elif i.startswith("razon_visita_"):
+    pedemo['p_'+i]=pedemo[i]/pedemo['sum_razon_visita']
+    pedemo['p_'+i] = pedemo['p_'+i].round(decimals = 2)
+
+
+/*****************************************************************/
