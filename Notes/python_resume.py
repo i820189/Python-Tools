@@ -13,6 +13,7 @@ import numpy as np
 ############################################################################################################
 
 >python - m pip install - -upgrade pip  # actualizar el PIP
+!{sys.executable} -m pip install xlrd
 
 > pip install virtualenv (instalar en el path de python38 de archivos de programa, sino agregar la carpeta scripts al path de entorno global)
 > virtualenv env_name_entorno  # creo el entorno
@@ -184,8 +185,9 @@ plt.show()
 # ...no dice buscar...
 
 .apply(lambda x: str(x))
-
-
+df = df[ ~df.ship_to_customer_code.apply( lambda x: str(x).startswith('I')) ]
+ df_client = df_client[ df_client['Cliente'].str[0]!='I' ].copy()
+ 
 ######################################### MATPLOTLIB #######################################################
 year = [202007, 202008, 202009, 202010]
 pop = [2.6, 3.67, 1.7, 2.2]
